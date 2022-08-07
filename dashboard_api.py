@@ -35,9 +35,11 @@ def get_neighbours(model_uri):
     return neighs_data
 
 
-def modus_operandi():
-    if not hasattr(modus_operandi, 'df'):
-        modus_operandi.df = pd.read_csv('test.csv')
+def modus_operandi(data):
+    if not os.path.exists('test.csv'):
+        data_file = st.file_uploader('Please upload test.csv file', type=['csv'])
+        if data_file is not None:
+            df = pd.read_csv(data_file)
     print('loading data complete')
     df = modus_operandi.df
     API_URI = 'http://127.0.0.1:8000/'
@@ -74,6 +76,4 @@ def modus_operandi():
 
 
 if __name__ == '__main__':
-    if not os.path.exists('test.csv'):
-        st.file_uploader('test.csv')
     modus_operandi()
