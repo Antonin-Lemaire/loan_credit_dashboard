@@ -75,6 +75,5 @@ def modus_operandi():
 
 if __name__ == '__main__':
     if not os.path.exists('test.csv'):
-        train, test = Kernel.get_data()
-        test.to_csv('test.csv')
+        st.file_uploader('test.csv')
     modus_operandi()
