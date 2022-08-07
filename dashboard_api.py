@@ -49,7 +49,8 @@ def modus_operandi():
     choices = request_index(API_URI)
     client_id = st.selectbox('Select client ID',
                              choices)
-
+    if client_id is not None:
+        st.table(df[df['index']==client_id])
     predict_button = st.checkbox('Predict')
     if predict_button:
         pred = request_prediction(API_URI, client_id)
