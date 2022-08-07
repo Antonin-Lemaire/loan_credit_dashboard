@@ -215,7 +215,7 @@ def get_train_test(debug=False):
     df = pd.read_csv('Inputs/application_train.csv', nrows=n_rows)
     test_df = pd.read_csv('Inputs/application_test.csv', nrows=n_rows)
     print("Train samples: {}, test samples: {}".format(len(df), len(test_df)))
-    df = df.append(test_df).reset_index()
+    df = pd.concat([df, test_df], ignore_index=True)
 
     # remove the 4 np.nan in gender as non-representative
     df = df[df['CODE_GENDER'] != 'XNA']
