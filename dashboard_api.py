@@ -36,14 +36,16 @@ def get_neighbours(model_uri):
 
 
 def modus_operandi():
+    df = None
     if not os.path.exists('test.csv'):
         data_file = st.file_uploader('Please upload test.csv file', type=['csv'])
         if data_file is not None:
             df = pd.read_csv(data_file).reset_index()
-    else :
+    else:
         df = pd.read_csv('test.csv').reset_index()
     print('loading data complete')
-
+    if df is None:
+        return
     API_URI = 'http://127.0.0.1:8000/'
 
     st.title('Loan credit default risk')
