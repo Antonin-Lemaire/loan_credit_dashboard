@@ -73,12 +73,15 @@ def modus_operandi():
                 st.image(explanation)
         comparison = st.checkbox('Compare to other clients')
         if comparison:
-            choice = st.selectbox('Select indicator', feats)
-            fig, ax = plt.subplots()
-            ax.boxplot(x=df[choice])
-            ax.scatter([1], df.loc[client_id, choice], marker='x', s=400, color='r')
-            st.pyplot(fig)
-            st.write()
+            choice = st.multiselect('Select indicators', feats)
+            if len(choice) != 0:
+                fig, ax = plt.subplots()
+                ax.boxplot(x=df[choice])
+                x = 1
+                for v in choice:
+                    ax.scatter([x], df.loc[client_id, v], marker='x', s=400, color='r')
+                    x = x+1
+                st.pyplot(fig)
 
 
 if __name__ == '__main__':
