@@ -33,7 +33,7 @@ def modus_operandi():
     print('loading data complete')
     if df is None:
         return
-    API_URI = 'http://127.0.0.1:8000/'
+    API_URI = 'https://loan-credit-default-risk-api.herokuapp.com/'
 
     st.title('Loan credit default risk')
 
