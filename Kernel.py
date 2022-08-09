@@ -288,7 +288,20 @@ def get_data(debug=False):
 
 
 if __name__ == "__main__":
+    feats = ['DAYS_BIRTH', 'DAYS_EMPLOYED', 'REGION_RATING_CLIENT',
+             'REGION_RATING_CLIENT_W_CITY', 'EXT_SOURCE_1', 'EXT_SOURCE_2',
+             'EXT_SOURCE_3', 'NAME_INCOME_TYPE_Working',
+             'NAME_EDUCATION_TYPE_Higher education', 'BURO_DAYS_CREDIT_MIN',
+             'BURO_DAYS_CREDIT_MEAN', 'BURO_DAYS_CREDIT_UPDATE_MEAN',
+             'BURO_CREDIT_ACTIVE_Active_MEAN', 'BURO_CREDIT_ACTIVE_Closed_MEAN',
+             'PREV_NAME_CONTRACT_STATUS_Approved_MEAN',
+             'PREV_NAME_CONTRACT_STATUS_Refused_MEAN',
+             'PREV_CODE_REJECT_REASON_XAP_MEAN', 'PREV_NAME_PRODUCT_TYPE_walk-in_MEAN',
+             'CC_CNT_DRAWINGS_ATM_CURRENT_MEAN', 'CC_CNT_DRAWINGS_CURRENT_MAX']
+    feats_train = np.append(feats, 'TARGET')
     data_train, data_test = get_data()
+    data_test = data_test[feats]
+    data_train = data_train[feats_train]
     data_train.to_csv('train.csv')
     data_test.to_csv('test.csv')
     print(data_test.shape)

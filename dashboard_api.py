@@ -5,21 +5,23 @@ import json
 import requests
 import seaborn as sns
 import os
+import numpy as np
 
 
 def request_prediction(model_uri, client):
     response = requests.post(model_uri + 'predict',
                              data=client.to_json())
-    print(client.to_json())
     response = json.loads(response.content.decode('utf-8'))
     return response
 
 
-def request_context(model_uri, client):
-    answer = requests.post(model_uri + 'context',
+def request_map(model_uri, client):
+    answer = requests.post(model_uri + 'context_map',
                            data=client.to_json())
-    answer = answer.content
-    return answer
+    response = json.loads(answer.content.decode('utf-8'))
+    response = json.loads(response)
+    print(response, type(response))
+    return response
 
 
 def modus_operandi():
@@ -34,7 +36,6 @@ def modus_operandi():
     if df is None:
         return
     API_URI = 'https://loan-credit-default-risk-api.herokuapp.com/'
-
     st.title('Loan credit default risk')
 
     choices = df.index
@@ -68,20 +69,46 @@ def modus_operandi():
                 st.write('This client\'s case requires further expertise')
             context_button = st.checkbox('Context')
             if context_button:
-                explanation = request_context(API_URI, client)
-
-                st.image(explanation)
+                explanation = request_map(API_URI, client)
+                explanation_list = explanation['1']
+                explanation_array = [explanation_list[x] for x in range(0, len(explanation_list))]
+                features = [feats[explanation_array[y][0]] for y in range(0, len(explanation_array))]
+                weights = [explanation_array[y][1] for y in range(0, len(explanation_array))]
+                explanation_df = pd.DataFrame(data={'variable': features,
+                                                    'weight': weights})
+                pos_df = explanation_df[explanation_df['weight'] < 0].sort_values(by='weight', ascending=True)
+                neg_df = explanation_df[explanation_df['weight'] > 0].sort_values(by='weight', ascending=False)
+                st.write('Please note that variables at the bottom have little to no impact for this client')
+                st.write('Variables to work on, from most harmful to least harmful')
+                st.table(neg_df['variable'])
+                st.write('Variables in favor of the client, from least beneficial to most beneficial')
+                st.table(pos_df['variable'])
         comparison = st.checkbox('Compare to other clients')
         if comparison:
+            df_comp = None
+            if not os.path.exists('train.csv'):
+                data_file_train = st.file_uploader('Please upload train.csv file', type=['csv'])
+                if data_file_train is not None:
+                    df_comp = pd.read_csv(data_file_train).reset_index()
+            else:
+                df_comp = pd.read_csv('train.csv').reset_index()
+            print('loading data complete')
+            if df is None:
+                return
             choice = st.multiselect('Select indicators', feats)
             if len(choice) != 0:
-                fig, ax = plt.subplots()
-                ax.boxplot(x=df[choice])
-                x = 1
                 for v in choice:
-                    ax.scatter([x], df.loc[client_id, v], marker='x', s=400, color='r')
-                    x = x+1
-                st.pyplot(fig)
+                    if 'DAYS' in v:
+                        df_comp[v] = df_comp[v].abs()
+                    fig, ax = plt.subplots()
+                    df_comp.boxplot(column=[v], by='TARGET', ax=ax)
+                    ax.axhline(df.loc[client_id, v], color='r')
+
+                    st.pyplot(fig)
+                    st.write(v)
+                    st.write('0 is the group that repaid its loan, 1 is the group that defaulted')
+                    st.write('The red line represents the selected client')
+                    st.write('the client is considered most similar to the group with the closest median mark (green)')
 
 
 if __name__ == '__main__':
