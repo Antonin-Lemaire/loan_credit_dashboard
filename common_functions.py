@@ -21,9 +21,9 @@ class ClassifierAPI:
         return output
 
     def explain(self, data: pd.DataFrame):
-        context = self.explainer.explain_instance(data.values.T[0], self.model.predict, num_features=len(data.columns))
+        context = self.explainer.explain_instance(data.values.T[0], self.model.predict_proba,
+                                                  num_features=20)
         return context
-
 
 class Instance:
     def __init__(self, id, df):
