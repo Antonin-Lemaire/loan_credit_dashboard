@@ -9,6 +9,21 @@ import numpy as np
 
 
 def request_prediction(model_uri, client):
+    """
+
+    Parameters
+    ----------
+    model_uri : string
+    The address where the api is hosted
+    client : pd.DataFrame
+    One line of a pandas dataframe [1:20]
+
+    Returns
+    -------
+    response : for some reason, it's a string.
+    The server answer as probability [x, y], where y is the one we're after.
+    """
+
     response = requests.post(model_uri + 'predict',
                              data=client.to_json())
     response = json.loads(response.content.decode('utf-8'))
@@ -16,11 +31,24 @@ def request_prediction(model_uri, client):
 
 
 def request_map(model_uri, client):
+    """
+
+    Parameters
+    ----------
+    model_uri : str
+    The address where the api is hosted
+    client : pd.DataFrame
+    One line of a pandas dataframe [1:20]
+
+    Returns
+    -------
+    response : dict
+    A map of each feature weight in the previous prediction from the api
+    """
     answer = requests.post(model_uri + 'context_map',
                            data=client.to_json())
     response = json.loads(answer.content.decode('utf-8'))
     response = json.loads(response)
-    print(response, type(response))
     return response
 
 
