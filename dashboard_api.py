@@ -54,7 +54,9 @@ def modus_operandi():
     if client_id is not None:
         client = df.iloc[client_id, :]
         client = client[feats]
-        st.table(client)
+        feats_to_display = st.multiselect('Select indicators to display:', feats)
+        if len(feats_to_display) > 0:
+            st.table(client[feats_to_display])
         predict_button = st.checkbox('Predict')
         if predict_button:
             pred = request_prediction(API_URI, client)
