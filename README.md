@@ -1,6 +1,6 @@
 # loan_credit_dashboard
 Dashboard hosted on streamlit.
-https://antonin-lemaire-loan-credit-dashboard-dashboard-api-pe5dbq.streamlitapp.com/
+https://antonin-lemaire-loan-credit-dashboard-dashboard-api-6b5mj7.streamlitapp.com/
 
 It allows for visualisation of data loaded locally or on the web app, and request predictions and explanations from the api.
 
@@ -26,12 +26,15 @@ If you wish to use a locally hosted api, replace the variable API_URI by the loc
 ## Usage
 
 To install local requirements open a python console and run: 
+
 pip install -r requirements.txt
 
 To run the Kernel and generate the csv files, open terminal in its folder and run:
+
 python3 Kernel.py
 
 To run the local dashboard:
+
 streamlit run dashboard_api.py
 
 
