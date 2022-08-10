@@ -53,6 +53,7 @@ def request_map(model_uri, client):
 
 
 def modus_operandi():
+    # Starts by checking the required files exist, otherwise asks for an upload
     df = None
     if not os.path.exists('test.csv'):
         data_file = st.file_uploader('Please upload test.csv file', type=['csv'])
@@ -63,9 +64,11 @@ def modus_operandi():
     print('loading data complete')
     if df is None:
         return
+
     API_URI = 'https://loan-credit-default-risk-api.herokuapp.com/'
     st.title('Loan credit default risk')
 
+    # first display, filter for indicators, client selection
     choices = df.index
     client_id = st.selectbox('Select client ID',
                              choices)
@@ -85,6 +88,8 @@ def modus_operandi():
         feats_to_display = st.multiselect('Select indicators to display:', feats)
         if len(feats_to_display) > 0:
             st.table(client[feats_to_display])
+
+        # Next up is the prediction part, doing an api request and interpreting it
         predict_button = st.checkbox('Predict')
         if predict_button:
             pred = request_prediction(API_URI, client)
@@ -97,6 +102,8 @@ def modus_operandi():
                 st.write('Loan granted')
             else:
                 st.write('This client\'s case requires further expertise')
+
+            # Context is doing an api request for the Lime explainer, and interpreting it
             context_button = st.checkbox('Context')
             if context_button:
                 explanation = request_map(API_URI, client)
@@ -113,6 +120,9 @@ def modus_operandi():
                 st.table(neg_df['variable'])
                 st.write('Variables in favor of the client, from least beneficial to most beneficial')
                 st.table(pos_df['variable'])
+
+        # Comparison will check that the comparison file is there,
+        # then display boxplots of each indicator with a reference to the selected client.
         comparison = st.checkbox('Compare to other clients')
         if comparison:
             df_comp = None
