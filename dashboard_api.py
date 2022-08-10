@@ -137,6 +137,9 @@ def modus_operandi():
                 return
             choice = st.multiselect('Select indicators', feats)
             if len(choice) != 0:
+                st.write('0 is the group that repaid its loan, 1 is the group that defaulted')
+                st.write('The red line represents the selected client')
+                st.write('the client is considered most similar to the group with the closest median mark (green)')
                 for v in choice:
                     if 'DAYS' in v:
                         df_comp[v] = df_comp[v].abs()
@@ -146,9 +149,7 @@ def modus_operandi():
 
                     st.pyplot(fig)
                     st.write(v)
-                    st.write('0 is the group that repaid its loan, 1 is the group that defaulted')
-                    st.write('The red line represents the selected client')
-                    st.write('the client is considered most similar to the group with the closest median mark (green)')
+
 
 
 if __name__ == '__main__':
