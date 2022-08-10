@@ -26,15 +26,15 @@ If you wish to use a locally hosted api, replace the variable API_URI by the loc
 ## Usage
 
 To install local requirements open a python console and run: 
-
+```bash
 pip install -r requirements.txt
-
+```
 To run the Kernel and generate the csv files, open terminal in its folder and run:
-
+```bash
 python3 Kernel.py
-
+```
 To run the local dashboard:
-
+```bash
 streamlit run dashboard_api.py
-
+```
 
